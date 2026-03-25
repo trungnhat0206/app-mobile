@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">HoTrungNhat_2122110432</string>
+    <string name="good_morning">Good Morning!</string>
+    <string name="search_hint">Search</string>
+    <string name="popular">Popular</string>
+    <string name="coffee">Coffee</string>
+    <string name="tea">Tea</string>
+    <string name="drink">Drink</string>
+    <string name="best_offers">Best Offers</string>
+    <string name="cafe_latte">Café latte</string>
+    <string name="americana">Americana</string>
+    <string name="price_30">$30</string>
+    <string name="rating_4_5">★ 4.5</string>
+    <string name="rating_4_2">★ 4.2</string>
+    <string name="welcome">WELCOME</string>
+    <string name="register">ĐĂNG KÝ</string>
+    <string name="create_account">TẠO TÀI KHOẢN</string>
+    <string name="join_us">Tham gia cùng chúng tôi ngay hôm nay</string>
+    <string name="username_hint">Tên đăng nhập</string>
+    <string name="password_hint">Mật khẩu</string>
+    <string name="confirm_password_hint">Xác nhận mật khẩu</string>
+    <string name="register_now">Đăng ký ngay</string>
+    <string name="already_have_account">Đã có tài khoản? Đăng nhập</string>
+    <string name="no_account_register">Chưa có tài khoản? Đăng ký ngay</string>
+    <string name="login">Đăng nhập</string>
+</resources>
