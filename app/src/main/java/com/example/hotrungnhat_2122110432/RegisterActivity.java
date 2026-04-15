@@ -3,11 +3,8 @@ package com.example.hotrungnhat_2122110432;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,10 +16,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText edtUsername, edtPassword;
-    private Button btnLoginSubmit;
-    private TextView tvBackToMain;
-    private ProgressBar progressBar;
+    private EditText edtRegUsername, edtRegEmail, edtRegPassword, edtRegConfirmPassword;
+    private Button btnRegisterSubmit;
+    private TextView tvBackToLogin;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -30,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
-        
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -39,53 +35,46 @@ public class RegisterActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
 
-        edtUsername = findViewById(R.id.edtLoginUsername);
-        edtPassword = findViewById(R.id.edtLoginPassword);
-        btnLoginSubmit = findViewById(R.id.btnLoginSubmit);
-        tvBackToMain = findViewById(R.id.tvBackToMain);
-        progressBar = findViewById(R.id.progressBar);
+        // Ánh xạ View chính xác theo activity_register.xml
+        edtRegUsername = findViewById(R.id.edtRegUsername);
+        edtRegEmail = findViewById(R.id.edtRegEmail);
+        edtRegPassword = findViewById(R.id.edtRegPassword);
+        edtRegConfirmPassword = findViewById(R.id.edtRegConfirmPassword);
+        btnRegisterSubmit = findViewById(R.id.btnRegisterSubmit);
+        tvBackToLogin = findViewById(R.id.tvBackToLogin);
 
-        if (btnLoginSubmit != null) {
-            btnLoginSubmit.setOnClickListener(v -> {
-                String user = edtUsername.getText().toString().trim();
-                String pass = edtPassword.getText().toString().trim();
+        if (btnRegisterSubmit != null) {
+            btnRegisterSubmit.setOnClickListener(v -> {
+                String user = edtRegUsername.getText().toString().trim();
+                String email = edtRegEmail.getText().toString().trim();
+                String pass = edtRegPassword.getText().toString().trim();
+                String confirmPass = edtRegConfirmPassword.getText().toString().trim();
 
-                if (user.isEmpty() || pass.isEmpty()) {
+                if (user.isEmpty() || email.isEmpty() || pass.isEmpty() || confirmPass.isEmpty()) {
                     Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // Hiển thị "đường truyền" (ProgressBar) và ẩn nút bấm
-                progressBar.setVisibility(View.VISIBLE);
-                btnLoginSubmit.setEnabled(false);
+                if (!pass.equals(confirmPass)) {
+                    Toast.makeText(this, "Mật khẩu xác nhận không khớp", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                // Giả lập thời gian truyền dữ liệu (2 giây)
-                new Handler().postDelayed(() -> {
-                    // Kiểm tra đăng nhập sau khi "truyền" xong
-                    if (user.equals("nhatlk2303") && pass.equals("123456")) {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("isLoggedIn", true);
-                        editor.putString("username", user);
-                        editor.apply();
+                // Lưu thông tin đăng ký
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("registered_user", user);
+                editor.putString("registered_pass", pass);
+                editor.apply();
 
-                        Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                        
-                        // Chuyển sang trang Home
-                        Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        // Nếu sai, hiện lại nút và ẩn Progress
-                        progressBar.setVisibility(View.GONE);
-                        btnLoginSubmit.setEnabled(true);
-                        Toast.makeText(this, "Sai tài khoản hoặc mật khẩu!", Toast.LENGTH_SHORT).show();
-                    }
-                }, 2000); // 2000ms = 2 giây
+                Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                
+                // Quay lại màn hình đăng nhập
+                finish();
             });
         }
 
-        if (tvBackToMain != null) {
-            tvBackToMain.setOnClickListener(v -> finish());
+        if (tvBackToLogin != null) {
+            tvBackToLogin.setOnClickListener(v -> finish());
         }
     }
 }

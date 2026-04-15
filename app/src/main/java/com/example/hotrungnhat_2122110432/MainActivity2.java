@@ -18,7 +18,6 @@ public class MainActivity2 extends AppCompatActivity {
 
     private EditText edtUsername, edtPassword;
     private Button btnLogin;
-    private TextView tvGoToRegister;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -27,7 +26,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         // Khởi tạo SharedPreferences
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        
+
         // Đã xóa phần kiểm tra tự động đăng nhập (Auto-login) để ứng dụng luôn hiện trang Login khi mở
 
         EdgeToEdge.enable(this);
@@ -43,7 +42,7 @@ public class MainActivity2 extends AppCompatActivity {
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        tvGoToRegister = findViewById(R.id.tvGoToRegister);
+        TextView tvGoToRegister = findViewById(R.id.tvGoToRegister);
 
         // Xử lý sự kiện nút Đăng nhập
         btnLogin.setOnClickListener(v -> {
