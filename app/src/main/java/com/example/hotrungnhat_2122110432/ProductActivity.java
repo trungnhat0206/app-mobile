@@ -2,78 +2,137 @@ package com.example.hotrungnhat_2122110432;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class ProductActivity extends AppCompatActivity {
 
-    private CardView item1, item2;
-    private Button btnBuy1, btnBuy2;
+    private EditText edtSearch;
+    private GridLayout gridProducts;
+    private List<ProductItem> fullProductList;
+    private String currentCategory = "All";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_product);
-        
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        edtSearch = findViewById(R.id.edtSearchProducts);
+        gridProducts = findViewById(R.id.gridProducts);
+
+        // Khởi tạo danh sách sản phẩm
+        initProductList();
+
+        // Hiển thị sản phẩm ban đầu
+        renderProducts(fullProductList);
+
+        // Xử lý tìm kiếm
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterProducts(s.toString(), currentCategory);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
-        // Ánh xạ các Card sản phẩm
-        item1 = findViewById(R.id.item1);
-        item2 = findViewById(R.id.item2);
-        
-        // Ánh xạ các nút Mua
-        btnBuy1 = findViewById(R.id.btnBuy1);
-        btnBuy2 = findViewById(R.id.btnBuy2);
+        // Xử lý lọc theo Category
+        findViewById(R.id.btnCatAll).setOnClickListener(v -> updateCategory("All"));
+        findViewById(R.id.btnCatCoffee).setOnClickListener(v -> updateCategory("Coffee"));
+        findViewById(R.id.btnCatTea).setOnClickListener(v -> updateCategory("Tea"));
+        findViewById(R.id.btnCatCake).setOnClickListener(v -> updateCategory("Bakery"));
 
-        // 1. Xem chi tiết sản phẩm 1
-        item1.setOnClickListener(v -> {
-            openDetail("Cà phê Muối", 35000, "Cà phê muối thơm ngon, vị mặn nhẹ hòa quyện cùng vị đắng của cà phê.");
-        });
-
-        // 2. Xem chi tiết sản phẩm 2
-        item2.setOnClickListener(v -> {
-            openDetail("Trà Đào Cam Sả", 45000, "Trà đào thơm mát, kết hợp vị chua của cam và hương thơm của sả.");
-        });
-
-        // 3. Thêm vào giỏ sản phẩm 1
-        btnBuy1.setOnClickListener(v -> {
-            addToCart("Cà phê Muối", 35000);
-        });
-
-        // 4. Thêm vào giỏ sản phẩm 2
-        btnBuy2.setOnClickListener(v -> {
-            addToCart("Trà Đào Cam Sả", 45000);
-        });
+        findViewById(R.id.btnBackProducts).setOnClickListener(v -> finish());
     }
 
-    private void openDetail(String name, double price, String desc) {
-        // Tạo đối tượng sản phẩm giả lập (Vì bạn không muốn file Product.kt riêng)
-        // Chúng ta sẽ truyền thông tin qua Intent
-        Intent intent = new Intent(ProductActivity.this, ProductdetailActivity.class);
-        intent.putExtra("name", name);
-        intent.putExtra("price", price);
-        intent.putExtra("desc", desc);
-        startActivity(intent);
+    private void initProductList() {
+        fullProductList = new ArrayList<>();
+        fullProductList.add(new ProductItem("Cà phê Muối", 35000, android.R.drawable.ic_menu_gallery, "Vị mặn dịu hòa quyện cà phê đậm đà.", "Coffee"));
+        fullProductList.add(new ProductItem("Trà Đào Cam Sả", 45000, android.R.drawable.ic_menu_gallery, "Thức uống giải nhiệt cực tốt.", "Tea"));
+        fullProductList.add(new ProductItem("Bạc Xỉu", 29000, android.R.drawable.ic_menu_gallery, "Cà phê sữa kiểu Sài Gòn.", "Coffee"));
+        fullProductList.add(new ProductItem("Caramel Macchiato", 55000, android.R.drawable.ic_menu_gallery, "Ngọt ngào hương caramel.", "Coffee"));
+        fullProductList.add(new ProductItem("Trà Vải", 38000, android.R.drawable.ic_menu_gallery, "Trà vải thơm mát lành.", "Tea"));
+        fullProductList.add(new ProductItem("Bánh Mì Pate", 25000, android.R.drawable.ic_menu_gallery, "Đặc sản đường phố Việt Nam.", "Bakery"));
+        fullProductList.add(new ProductItem("Croissant Choco", 32000, android.R.drawable.ic_menu_gallery, "Bánh sừng bò nhân socola.", "Bakery"));
     }
 
-    private void addToCart(String name, double price) {
-        // Thêm vào danh sách tĩnh trong CartActivity
-        // Lưu ý: Cần một class trung gian để lưu dữ liệu sản phẩm đơn giản
-        // Nếu không có class Product, ta dùng các biến cơ bản.
-        Toast.makeText(this, "Đã thêm " + name + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+    private void updateCategory(String category) {
+        currentCategory = category;
+        filterProducts(edtSearch.getText().toString(), currentCategory);
+    }
+
+    private void renderProducts(List<ProductItem> list) {
+        gridProducts.removeAllViews();
+        for (ProductItem item : list) {
+            View view = LayoutInflater.from(this).inflate(R.layout.item_product_card, gridProducts, false);
+            
+            TextView tvName = view.findViewById(R.id.tvCardName);
+            TextView tvPrice = view.findViewById(R.id.tvCardPrice);
+            ImageView img = view.findViewById(R.id.imgCard);
+            Button btnBuy = view.findViewById(R.id.btnCardBuy);
+
+            tvName.setText(item.name);
+            tvPrice.setText(String.format(Locale.getDefault(), "%,.0fđ", item.price));
+            
+            view.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ProductdetailActivity.class);
+                intent.putExtra("name", item.name);
+                intent.putExtra("price", item.price);
+                intent.putExtra("desc", item.desc);
+                startActivity(intent);
+            });
+
+            btnBuy.setOnClickListener(v -> {
+                CartActivity.cartList.add(new CartActivity.MockProduct(item.name, item.price, item.imageRes));
+                Toast.makeText(this, "Đã thêm " + item.name + " vào giỏ!", Toast.LENGTH_SHORT).show();
+            });
+
+            gridProducts.addView(view);
+        }
+    }
+
+    private void filterProducts(String query, String category) {
+        List<ProductItem> filteredList = new ArrayList<>();
+        for (ProductItem item : fullProductList) {
+            boolean matchesQuery = item.name.toLowerCase().contains(query.toLowerCase());
+            boolean matchesCategory = category.equals("All") || item.category.equals(category);
+            
+            if (matchesQuery && matchesCategory) {
+                filteredList.add(item);
+            }
+        }
+        renderProducts(filteredList);
+    }
+
+    private static class ProductItem {
+        String name;
+        double price;
+        int imageRes;
+        String desc;
+        String category;
+
+        ProductItem(String name, double price, int imageRes, String desc, String category) {
+            this.name = name;
+            this.price = price;
+            this.imageRes = imageRes;
+            this.desc = desc;
+            this.category = category;
+        }
     }
 }
