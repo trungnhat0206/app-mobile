@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme. -->
-    <style name="Theme.HoTrungNhat_2122110432" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Đổi sang Theme.MaterialComponents để hỗ trợ các giao diện hiện đại -->
+    <style name="Theme.HoTrungNhat_2122110432" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>

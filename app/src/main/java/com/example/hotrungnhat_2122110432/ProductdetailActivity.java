@@ -37,16 +37,18 @@ public class ProductdetailActivity extends AppCompatActivity {
         String name = getIntent().getStringExtra("name");
         double price = getIntent().getDoubleExtra("price", 0);
         String desc = getIntent().getStringExtra("desc");
+        int image = getIntent().getIntExtra("image", android.R.drawable.ic_menu_gallery);
 
         // Hiển thị dữ liệu lên giao diện
         if (name != null) {
             tvProductNameDetail.setText(name);
             tvProductPriceDetail.setText(String.format(Locale.getDefault(), "%,.0fđ", price));
             tvProductDescDetail.setText(desc);
+            imgProductDetail.setImageResource(image);
             
             // Xử lý nút Thêm vào giỏ
             btnAddToCart.setOnClickListener(v -> {
-                CartActivity.cartList.add(new CartActivity.MockProduct(name, price, android.R.drawable.ic_menu_gallery));
+                CartActivity.cartList.add(new CartActivity.MockProduct(name, price, image));
                 Toast.makeText(this, "Đã thêm " + name + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
             });
         }

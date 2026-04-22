@@ -63,13 +63,14 @@ public class ProductActivity extends AppCompatActivity {
 
     private void initProductList() {
         fullProductList = new ArrayList<>();
-        fullProductList.add(new ProductItem("Cà phê Muối", 35000, android.R.drawable.ic_menu_gallery, "Vị mặn dịu hòa quyện cà phê đậm đà.", "Coffee"));
-        fullProductList.add(new ProductItem("Trà Đào Cam Sả", 45000, android.R.drawable.ic_menu_gallery, "Thức uống giải nhiệt cực tốt.", "Tea"));
-        fullProductList.add(new ProductItem("Bạc Xỉu", 29000, android.R.drawable.ic_menu_gallery, "Cà phê sữa kiểu Sài Gòn.", "Coffee"));
-        fullProductList.add(new ProductItem("Caramel Macchiato", 55000, android.R.drawable.ic_menu_gallery, "Ngọt ngào hương caramel.", "Coffee"));
-        fullProductList.add(new ProductItem("Trà Vải", 38000, android.R.drawable.ic_menu_gallery, "Trà vải thơm mát lành.", "Tea"));
-        fullProductList.add(new ProductItem("Bánh Mì Pate", 25000, android.R.drawable.ic_menu_gallery, "Đặc sản đường phố Việt Nam.", "Bakery"));
-        fullProductList.add(new ProductItem("Croissant Choco", 32000, android.R.drawable.ic_menu_gallery, "Bánh sừng bò nhân socola.", "Bakery"));
+        // Sử dụng các hình ảnh bạn đã thêm vào drawable: cf, vf, phe
+        fullProductList.add(new ProductItem("Cà phê Muối", 35000, R.drawable.cf, "Vị mặn dịu hòa quyện cà phê đậm đà.", "Coffee"));
+        fullProductList.add(new ProductItem("Trà Đào Cam Sả", 45000, R.drawable.vf, "Thức uống giải nhiệt cực tốt.", "Tea"));
+        fullProductList.add(new ProductItem("Bạc Xỉu", 29000, R.drawable.phe, "Cà phê sữa kiểu Sài Gòn.", "Coffee"));
+        fullProductList.add(new ProductItem("Caramel Macchiato", 55000, R.drawable.cf, "Ngọt ngào hương caramel.", "Coffee"));
+        fullProductList.add(new ProductItem("Trà Vải", 38000, R.drawable.vf, "Trà vải thơm mát lành.", "Tea"));
+        fullProductList.add(new ProductItem("Bánh Mì Pate", 25000, R.drawable.phe, "Đặc sản đường phố Việt Nam.", "Bakery"));
+        fullProductList.add(new ProductItem("Croissant Choco", 32000, R.drawable.cf, "Bánh sừng bò nhân socola.", "Bakery"));
     }
 
     private void updateCategory(String category) {
@@ -89,12 +90,14 @@ public class ProductActivity extends AppCompatActivity {
 
             tvName.setText(item.name);
             tvPrice.setText(String.format(Locale.getDefault(), "%,.0fđ", item.price));
+            img.setImageResource(item.imageRes); // Hiển thị hình ảnh
             
             view.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ProductdetailActivity.class);
                 intent.putExtra("name", item.name);
                 intent.putExtra("price", item.price);
                 intent.putExtra("desc", item.desc);
+                intent.putExtra("image", item.imageRes); // Truyền ảnh sang trang chi tiết
                 startActivity(intent);
             });
 

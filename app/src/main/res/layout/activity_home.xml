@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F9FA"
@@ -352,7 +353,7 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="130dp"
-                                android:src="@drawable/img_coffee_1"
+                                android:src="@drawable/cf"
                                 android:scaleType="centerCrop"/>
                             <TextView
                                 android:layout_width="wrap_content"
@@ -365,7 +366,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="25.000đ"
+                                android:text="35.000đ"
                                 android:paddingLeft="12dp"
                                 android:textColor="#C2185B"
                                 android:textSize="14sp"
@@ -373,7 +374,107 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- More featured items can be added here -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="160dp"
+                        android:layout_height="220dp"
+                        android:layout_margin="8dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="4dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="130dp"
+                                android:src="@drawable/vf"
+                                android:scaleType="centerCrop"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Trà Đào Cam Sả"
+                                android:paddingLeft="12dp"
+                                android:paddingTop="10dp"
+                                android:textColor="#2D3436"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="45.000đ"
+                                android:paddingLeft="12dp"
+                                android:textColor="#C2185B"
+                                android:textSize="14sp"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="160dp"
+                        android:layout_height="220dp"
+                        android:layout_margin="8dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="4dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="130dp"
+                                android:src="@drawable/phe"
+                                android:scaleType="centerCrop"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Bạc Xỉu Đá"
+                                android:paddingLeft="12dp"
+                                android:paddingTop="10dp"
+                                android:textColor="#2D3436"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="29.000đ"
+                                android:paddingLeft="12dp"
+                                android:textColor="#C2185B"
+                                android:textSize="14sp"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="160dp"
+                        android:layout_height="220dp"
+                        android:layout_margin="8dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="4dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="130dp"
+                                android:src="@drawable/ca_phe"
+                                android:scaleType="centerCrop"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Caramel Macchiato"
+                                android:paddingLeft="12dp"
+                                android:paddingTop="10dp"
+                                android:textColor="#2D3436"
+                                android:textStyle="bold"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="55.000đ"
+                                android:paddingLeft="12dp"
+                                android:textColor="#C2185B"
+                                android:textSize="14sp"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
             </HorizontalScrollView>

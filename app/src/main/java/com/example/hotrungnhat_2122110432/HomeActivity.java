@@ -3,7 +3,6 @@ package com.example.hotrungnhat_2122110432;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,8 +16,8 @@ import androidx.core.view.WindowInsetsCompat;
 public class HomeActivity extends AppCompatActivity {
 
     private TextView tvWelcomeUser;
-    private CardView cardProducts, cardCart, cardPayment, cardLogout;
-    private ImageButton btnProfile;
+    private androidx.cardview.widget.CardView cardProducts, cardCart, cardPayment, cardLogout;
+    private android.view.View btnProfile;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -27,10 +26,8 @@ public class HomeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
         
-        // Sửa lỗi "main" ID không tồn tại trong CoordinatorLayout mới
-        // Trong activity_home.xml mới, tôi không đặt ID cho CoordinatorLayout
-        // Hãy thêm ID hoặc sử dụng View gốc
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
+        // Thiết lập padding để không bị che bởi thanh trạng thái
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -76,7 +73,7 @@ public class HomeActivity extends AppCompatActivity {
             cardLogout.setOnClickListener(v -> {
                 // Đăng xuất
                 Toast.makeText(HomeActivity.this, "Đã đăng xuất!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(HomeActivity.this, MainActivity2.class);
+                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();

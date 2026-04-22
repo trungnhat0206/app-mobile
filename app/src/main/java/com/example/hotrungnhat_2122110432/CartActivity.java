@@ -41,6 +41,15 @@ public class CartActivity extends AppCompatActivity {
         });
 
         updateCartUI();
+
+        // Thêm xử lý nút quay lại trên Toolbar
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbarCart);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     private void updateCartUI() {
