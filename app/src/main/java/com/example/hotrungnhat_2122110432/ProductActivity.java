@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +23,7 @@ import java.util.Locale;
 public class ProductActivity extends AppCompatActivity {
 
     private EditText edtSearch;
-    private GridLayout gridProducts;
+    private LinearLayout lnProductItems;
     private List<ProductItem> fullProductList;
     private String currentCategory = "All";
 
@@ -32,7 +33,7 @@ public class ProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product);
 
         edtSearch = findViewById(R.id.edtSearchProducts);
-        gridProducts = findViewById(R.id.gridProducts);
+        lnProductItems = findViewById(R.id.lnProductItems);
 
         // Khởi tạo danh sách sản phẩm
         initProductList();
@@ -79,34 +80,56 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void renderProducts(List<ProductItem> list) {
-        gridProducts.removeAllViews();
+        lnProductItems.removeAllViews();
         for (ProductItem item : list) {
-            View view = LayoutInflater.from(this).inflate(R.layout.item_product_card, gridProducts, false);
+            View view = LayoutInflater.from(this).inflate(R.layout.item_product_card, lnProductItems, false);
             
             TextView tvName = view.findViewById(R.id.tvCardName);
             TextView tvPrice = view.findViewById(R.id.tvCardPrice);
             ImageView img = view.findViewById(R.id.imgCard);
+            
+            android.widget.ImageButton btnMinus = view.findViewById(R.id.btnMinus);
+            android.widget.ImageButton btnPlus = view.findViewById(R.id.btnPlus);
+            TextView tvQuantity = view.findViewById(R.id.tvQuantity);
             Button btnBuy = view.findViewById(R.id.btnCardBuy);
+
+            final int[] quantity = {1}; // Default quantity
 
             tvName.setText(item.name);
             tvPrice.setText(String.format(Locale.getDefault(), "%,.0fđ", item.price));
-            img.setImageResource(item.imageRes); // Hiển thị hình ảnh
+            img.setImageResource(item.imageRes);
+
+            btnMinus.setOnClickListener(v -> {
+                if (quantity[0] > 1) {
+                    quantity[0]--;
+                    tvQuantity.setText(String.valueOf(quantity[0]));
+                }
+            });
+
+            btnPlus.setOnClickListener(v -> {
+                quantity[0]++;
+                tvQuantity.setText(String.valueOf(quantity[0]));
+            });
             
             view.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ProductdetailActivity.class);
                 intent.putExtra("name", item.name);
                 intent.putExtra("price", item.price);
                 intent.putExtra("desc", item.desc);
-                intent.putExtra("image", item.imageRes); // Truyền ảnh sang trang chi tiết
+                intent.putExtra("image", item.imageRes);
                 startActivity(intent);
             });
 
             btnBuy.setOnClickListener(v -> {
-                CartActivity.cartList.add(new CartActivity.MockProduct(item.name, item.price, item.imageRes));
-                Toast.makeText(this, "Đã thêm " + item.name + " vào giỏ!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, ProductdetailActivity.class);
+                intent.putExtra("name", item.name);
+                intent.putExtra("price", item.price);
+                intent.putExtra("desc", item.desc);
+                intent.putExtra("image", item.imageRes);
+                startActivity(intent);
             });
 
-            gridProducts.addView(view);
+            lnProductItems.addView(view);
         }
     }
 

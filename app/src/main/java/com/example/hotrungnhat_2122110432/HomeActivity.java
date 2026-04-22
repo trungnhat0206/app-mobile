@@ -17,6 +17,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private TextView tvWelcomeUser;
     private androidx.cardview.widget.CardView cardProducts, cardCart, cardPayment, cardLogout;
+    private androidx.cardview.widget.CardView cardFeatured1, cardFeatured2, cardFeatured3, cardFeatured4;
     private android.view.View btnProfile;
     private SharedPreferences sharedPreferences;
 
@@ -43,9 +44,29 @@ public class HomeActivity extends AppCompatActivity {
         cardPayment = findViewById(R.id.cardPayment);
         cardLogout = findViewById(R.id.cardLogout);
 
+        // Ánh xạ các món nổi bật
+        cardFeatured1 = findViewById(R.id.cardFeatured1);
+        cardFeatured2 = findViewById(R.id.cardFeatured2);
+        cardFeatured3 = findViewById(R.id.cardFeatured3);
+        cardFeatured4 = findViewById(R.id.cardFeatured4);
+
         // Hiển thị tên người dùng (Lấy từ SharedPreferences đã lưu khi đăng nhập)
         String username = sharedPreferences.getString("username", "Nhật");
         tvWelcomeUser.setText("Hi, " + username + "!");
+
+        // Cài đặt sự kiện click cho các Card món nổi bật
+        if (cardFeatured1 != null) {
+            cardFeatured1.setOnClickListener(v -> goToDetail("Cà Phê Muối", 35000, "Vị mặn dịu hòa quyện cà phê đậm đà.", R.drawable.cf));
+        }
+        if (cardFeatured2 != null) {
+            cardFeatured2.setOnClickListener(v -> goToDetail("Trà Đào Cam Sả", 45000, "Thức uống giải nhiệt cực tốt.", R.drawable.vf));
+        }
+        if (cardFeatured3 != null) {
+            cardFeatured3.setOnClickListener(v -> goToDetail("Bạc Xỉu Đá", 29000, "Cà phê sữa kiểu Sài Gòn.", R.drawable.phe));
+        }
+        if (cardFeatured4 != null) {
+            cardFeatured4.setOnClickListener(v -> goToDetail("Caramel Macchiato", 55000, "Ngọt ngào hương caramel.", R.drawable.ca_phe));
+        }
 
         // Cài đặt sự kiện click cho các Card
         if (cardProducts != null) {
@@ -85,5 +106,14 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Tính năng Profile đang cập nhật!", Toast.LENGTH_SHORT).show();
             });
         }
+    }
+
+    private void goToDetail(String name, double price, String desc, int imageRes) {
+        Intent intent = new Intent(HomeActivity.this, ProductdetailActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("price", price);
+        intent.putExtra("desc", desc);
+        intent.putExtra("image", imageRes);
+        startActivity(intent);
     }
 }

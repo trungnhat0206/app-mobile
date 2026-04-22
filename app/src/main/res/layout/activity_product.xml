@@ -155,16 +155,15 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <GridLayout
-                android:id="@+id/gridProducts"
+            <LinearLayout
+                android:id="@+id/lnProductItems"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alignmentMode="alignMargins"
-                android:columnCount="2">
+                android:orientation="vertical">
 
                 <!-- The products will be populated or filtered here -->
 
-            </GridLayout>
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
