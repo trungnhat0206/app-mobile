@@ -37,11 +37,8 @@ public class PaymentActivity extends AppCompatActivity {
         tvPaymentTotal = findViewById(R.id.tvPaymentTotal);
         btnConfirmPayment = findViewById(R.id.btnConfirmPayment);
 
-        // Tính tổng tiền
-        double total = 0;
-        for (CartActivity.MockProduct p : CartActivity.cartList) {
-            total += p.price;
-        }
+        // Lấy tổng tiền từ Intent
+        double total = getIntent().getDoubleExtra("totalPrice", 0);
         tvPaymentTotal.setText(String.format(Locale.getDefault(), "%,.0fđ", total));
 
         btnConfirmPayment.setOnClickListener(v -> {
@@ -55,8 +52,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             Toast.makeText(this, "Đặt hàng thành công! Cảm ơn bạn.", Toast.LENGTH_LONG).show();
             
-            // Xóa giỏ hàng sau khi thanh toán
-            CartActivity.cartList.clear();
+            // Ở đây bạn có thể thêm logic xóa giỏ hàng trên MockAPI nếu muốn
             
             // Quay về Home
             Intent intent = new Intent(this, HomeActivity.class);

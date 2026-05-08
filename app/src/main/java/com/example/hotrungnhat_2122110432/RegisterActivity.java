@@ -60,16 +60,24 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Lưu thông tin đăng ký
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("registered_user", user);
-                editor.putString("registered_pass", pass);
-                editor.apply();
+                // Call MockAPI to register user
+                User newUser = new User(user, pass, email);
+                ApiClient.getApiService().registerUser(newUser).enqueue(new retrofit2.Callback<User>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<User> call, retrofit2.Response<User> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-                Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                
-                // Quay lại màn hình đăng nhập
-                finish();
+                    @Override
+                    public void onFailure(retrofit2.Call<User> call, Throwable t) {
+                        Toast.makeText(RegisterActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             });
         }
 

@@ -11,17 +11,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CartActivity extends AppCompatActivity {
 
-    // Danh sách giỏ hàng dùng chung toàn app
-    public static List<MockProduct> cartList = new ArrayList<>();
     private LinearLayout lnCartContainer;
     private TextView tvTotalPrice;
     private Button btnCheckout;
+
+    private double currentTotal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +37,14 @@ public class CartActivity extends AppCompatActivity {
         btnCheckout = findViewById(R.id.btnCheckout);
 
         btnCheckout.setOnClickListener(v -> {
-            if (cartList.isEmpty()) {
-                Toast.makeText(this, "Giỏ hàng của bạn đang trống!", Toast.LENGTH_SHORT).show();
+            if (currentTotal > 0) {
+                Intent intent = new Intent(this, PaymentActivity.class);
+                intent.putExtra("totalPrice", currentTotal);
+                startActivity(intent);
             } else {
-                startActivity(new Intent(this, PaymentActivity.class));
+                Toast.makeText(this, "Giỏ hàng đang trống", Toast.LENGTH_SHORT).show();
             }
         });
-
-        updateCartUI();
 
         // Thêm xử lý nút quay lại trên Toolbar
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbarCart);
@@ -50,15 +54,39 @@ public class CartActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         toolbar.setNavigationOnClickListener(v -> finish());
+
+        fetchCart();
     }
 
-    private void updateCartUI() {
-        lnCartContainer.removeAllViews();
-        double total = 0;
+    private void fetchCart() {
+        ApiClient.getApiService().getCart().enqueue(new Callback<List<CartItem>>() {
+            @Override
+            public void onResponse(Call<List<CartItem>> call, Response<List<CartItem>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    updateCartUI(response.body());
+                } else {
+                    Toast.makeText(CartActivity.this, "Không thể tải giỏ hàng", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-        for (int i = 0; i < cartList.size(); i++) {
-            MockProduct product = cartList.get(i);
-            total += product.price;
+            @Override
+            public void onFailure(Call<List<CartItem>> call, Throwable t) {
+                Toast.makeText(CartActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateCartUI(List<CartItem> cartList) {
+        lnCartContainer.removeAllViews();
+        currentTotal = 0;
+
+        if (cartList.isEmpty()) {
+            tvTotalPrice.setText("0đ");
+            return;
+        }
+
+        for (CartItem item : cartList) {
+            currentTotal += item.getPrice() * item.getQuantity();
 
             View itemView = LayoutInflater.from(this).inflate(R.layout.item_cart, lnCartContainer, false);
             
@@ -67,32 +95,42 @@ public class CartActivity extends AppCompatActivity {
             TextView tvPrice = itemView.findViewById(R.id.tvCartProductPrice);
             ImageButton btnRemove = itemView.findViewById(R.id.btnRemoveFromCart);
 
-            img.setImageResource(product.imageRes);
-            tvName.setText(product.name);
-            tvPrice.setText(String.format(Locale.getDefault(), "%,.0fđ", product.price));
+            tvName.setText(item.getName());
+            tvPrice.setText(String.format(Locale.getDefault(), "%,.0fđ x %d", item.getPrice(), item.getQuantity()));
+            
+            // Load image using Glide (hỗ trợ cả URL và Resource ID dạng String)
+            String imgData = item.getImage();
+            try {
+                int resId = Integer.parseInt(imgData);
+                img.setImageResource(resId);
+            } catch (NumberFormatException e) {
+                Glide.with(this).load(imgData).into(img);
+            }
 
-            final int index = i;
             btnRemove.setOnClickListener(v -> {
-                cartList.remove(index);
-                updateCartUI();
+                removeItem(item.getId());
             });
 
             lnCartContainer.addView(itemView);
         }
 
-        tvTotalPrice.setText(String.format(Locale.getDefault(), "%,.0fđ", total));
+        tvTotalPrice.setText(String.format(Locale.getDefault(), "%,.0fđ", currentTotal));
     }
 
-    // Lớp dữ liệu đơn giản nằm trong Activity để dễ quản lý
-    public static class MockProduct {
-        String name;
-        double price;
-        int imageRes;
+    private void removeItem(String id) {
+        ApiClient.getApiService().removeFromCart(id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(CartActivity.this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+                    fetchCart(); // Tải lại giỏ hàng
+                }
+            }
 
-        public MockProduct(String name, double price, int imageRes) {
-            this.name = name;
-            this.price = price;
-            this.imageRes = imageRes;
-        }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(CartActivity.this, "Lỗi khi xóa", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

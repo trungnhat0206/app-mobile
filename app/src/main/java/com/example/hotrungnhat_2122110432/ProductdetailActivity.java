@@ -48,8 +48,22 @@ public class ProductdetailActivity extends AppCompatActivity {
             
             // Xử lý nút Thêm vào giỏ
             btnAddToCart.setOnClickListener(v -> {
-                CartActivity.cartList.add(new CartActivity.MockProduct(name, price, image));
-                Toast.makeText(this, "Đã thêm " + name + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+                CartItem cartItem = new CartItem(name, price, String.valueOf(image), 1);
+                ApiClient.getApiService().addToCart(cartItem).enqueue(new retrofit2.Callback<CartItem>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<CartItem> call, retrofit2.Response<CartItem> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(ProductdetailActivity.this, "Đã thêm " + name + " vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ProductdetailActivity.this, "Lỗi khi thêm vào giỏ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<CartItem> call, Throwable t) {
+                        Toast.makeText(ProductdetailActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             });
         }
 

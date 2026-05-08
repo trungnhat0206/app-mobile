@@ -52,25 +52,28 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // Lấy thông tin tài khoản đã đăng ký từ bộ nhớ
-            String registeredUser = sharedPreferences.getString("registered_user", "");
-            String registeredPass = sharedPreferences.getString("registered_pass", "");
-
-            // Kiểm tra tài khoản (admin hoặc tài khoản đăng ký)
-            boolean isAdmin = inputUser.equals("admin") && inputPass.equals("123456");
-            boolean isUser = inputUser.equals(registeredUser) && inputPass.equals(registeredPass) && !registeredUser.isEmpty();
-
-            if (isAdmin || isUser) {
-                // Lưu tên người dùng để hiển thị ở trang chủ
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("username", inputUser);
-                editor.apply();
-
-                Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                goToHome();
-            } else {
-                Toast.makeText(LoginActivity.this, "Sai tài khoản hoặc mật khẩu!", Toast.LENGTH_SHORT).show();
+            // Kiểm tra tài khoản admin cục bộ
+            if (inputUser.equals("admin") && inputPass.equals("123456")) {
+                saveUserAndGoHome(inputUser);
+                return;
             }
+
+            // Kiểm tra tài khoản từ MockAPI
+            ApiClient.getApiService().login(inputUser, inputPass).enqueue(new retrofit2.Callback<java.util.List<User>>() {
+                @Override
+                public void onResponse(retrofit2.Call<java.util.List<User>> call, retrofit2.Response<java.util.List<User>> response) {
+                    if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                        saveUserAndGoHome(inputUser);
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Sai tài khoản hoặc mật khẩu!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<java.util.List<User>> call, Throwable t) {
+                    Toast.makeText(LoginActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         // Chuyển sang trang Đăng ký
@@ -78,6 +81,15 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void saveUserAndGoHome(String username) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", username);
+        editor.apply();
+
+        Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+        goToHome();
     }
 
     private void goToHome() {
